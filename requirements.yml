@@ -1,0 +1,4 @@
+# base role
+- src: https://github.com/nagonzalez/ansible-role-base
+  version: master
+  name: nagonzalez.base
