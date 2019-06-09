@@ -1,0 +1,3 @@
+- hosts: os_linux
+  roles:
+    - nagonzalez.base
