@@ -1,0 +1,3 @@
+lvm_data_disk: true
+lvm_data_pvs: /dev/sdb
+lvm_data_mount: /var/lib/docker

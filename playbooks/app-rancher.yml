@@ -1,0 +1,4 @@
+- hosts: app_rancher
+  gather_facts: no
+  roles:
+    - nagonzalez.rancher
