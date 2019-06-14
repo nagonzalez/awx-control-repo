@@ -2,3 +2,7 @@
 - src: https://github.com/nagonzalez/ansible-role-base
   version: master
   name: nagonzalez.base
+
+- src: https://github.com/nagonzalez/ansible-role-rancher
+  version: master
+  name: nagonzalez.rancher
