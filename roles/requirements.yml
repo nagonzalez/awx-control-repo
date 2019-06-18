@@ -3,6 +3,14 @@
   version: master
   name: nagonzalez.base
 
+- src: https://github.com/nagonzalez/ansible-role-edgeos
+  version: master
+  name: nagonzalez.edgeos
+
+- src: https://github.com/nagonzalez/ansible-role-pxe
+  version: master
+  name: nagonzalez.pxe
+
 - src: https://github.com/nagonzalez/ansible-role-rancher
   version: master
   name: nagonzalez.rancher

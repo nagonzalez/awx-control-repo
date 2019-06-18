@@ -9,3 +9,8 @@ ansible_password: !vault |
   63636336303437623036313962666264376539336263646464666661316332653034633865313936
   3737303263613537370a393562303466333238373531333361666265373731376638643636376163
   6665
+
+
+edgeos_config_lines:
+  - set service dhcp-server shared-network-name eth3.31-vmware-esxi-mgmt subnet 172.31.31.0/24 bootfile-name pxelinux.0
+  - set service dhcp-server shared-network-name eth3.31-vmware-esxi-mgmt subnet 172.31.31.0/24 bootfile-server 172.31.31.253
