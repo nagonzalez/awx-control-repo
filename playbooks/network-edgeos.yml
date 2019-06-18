@@ -1,3 +1,3 @@
-- hosts: network_edge_os
+- hosts: network_edgeos
   roles:
     - nagonzalez.edgeos
