@@ -1,0 +1,26 @@
+- hosts: app_esxi
+  tasks:
+
+    - name: copy ssl cert
+      copy:
+        content: "{{ esxi_ssl_crt }}"
+        dest: /etc/vmware/ssl/rui.crt
+        backup: true
+        mode: 0644
+      register: l_ssl_cert
+
+    - name: copy ssl key
+      copy:
+        content: "{{ esxi_ssl_key }}"
+        dest: /etc/vmware/ssl/rui.key
+        backup: true
+        mode: 0644
+      register: l_ssl_key  
+
+    - name: restart management services if certificate or key changed
+      command: "{{ item }}"
+      loop:
+        - /etc/init.d/hostd restart
+        - /etc/init.d/vpxa restart
+      when:
+        - l_ssl_cert.changed or l_ssl_key.changed

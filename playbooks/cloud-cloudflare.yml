@@ -1,0 +1,13 @@
+- hosts: 127.0.0.1
+  gather_facts: no
+  tasks:
+    - name: Create Cloudflare DNS records
+      cloudflare_dns:
+        zone: "{{ cloudflare_zone }}"
+        record: "{{ item.record }}"
+        type: "{{ item.type }}"
+        value: "{{ item.value }}"
+        ttl: "{{ item.ttl }}"
+        account_email: "{{ cloudflare_account_email }}"
+        account_api_token: "{{ cloudflare_account_api_token }}"
+      loop: "{{ cloudflare_dns_records }}"
