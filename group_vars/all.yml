@@ -11,7 +11,7 @@ cloudflare_account_api_token: !vault |
 cloudflare_zone: noeg.wtf
 
 cloudflare_dns_records:
-  # ESX HOSTS
+  # VLAN31: ESX HOSTS
   - record: esx1
     type: A
     value: 172.31.31.1
@@ -27,4 +27,10 @@ cloudflare_dns_records:
   - record: esx4
     type: A
     value: 172.31.31.4
+    ttl: 86400
+
+  # VLAN32: vCenter stuff
+  - record: vcenter
+    type: A
+    value: 172.31.32.1
     ttl: 86400
