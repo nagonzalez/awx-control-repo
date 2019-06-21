@@ -1,0 +1,142 @@
+- hosts: 127.0.0.1
+  tasks:
+
+    - name: Add vCenter licenses
+      vcenter_license:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        license: "{{ item }}"
+        state: present
+      loop: "{{ vcenter_licenses }}"
+      changed_when: false
+
+    - name: Create Datacenters
+      vmware_datacenter:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        datacenter_name: "{{ item }}"
+        state: present
+      loop: "{{ vcenter_datacenters }}"
+
+    - name: Create Clusters
+      vmware_cluster:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        enable_ha: true
+        enable_drs: true
+        enable_vsan: true
+        datacenter_name: "{{ item.datacenter }}"
+        cluster_name: "{{ item.name }}"
+      loop: "{{ vcenter_clusters }}"
+
+    - name: Add ESXi Hosts to vCenter
+      vmware_host:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        datacenter: "{{ item.datacenter }}"
+        cluster: "{{ item.cluster }}"
+        esxi_hostname: "{{ item.hostname }}"
+        esxi_username: "{{ item.username }}"
+        esxi_password: "{{ item.password }}"
+        state: present
+      loop: "{{ vcenter_hosts }}"
+
+    - name: Add vCenter licenses to hosts
+      vcenter_license:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        esxi_hostname: "{{ item.hostname }}"
+        license: "{{ item.license }}"
+        state: present
+      loop: "{{ vcenter_hosts }}"
+
+    # - name: Add vSAN license and assign to the given cluster
+    #   vcenter_license:
+    #     hostname: '{{ vcenter_hostname }}'
+    #     username: '{{ vcenter_username }}'
+    #     password: '{{ vcenter_password }}'
+    #     datacenter: '{{ datacenter_name }}'
+    #     cluster_name: '{{ cluster_name }}'
+    #     license: f600d-21ae3-5592b-249e0-dd502
+    #     state: present
+
+    - name: Create dvSwitches
+      vmware_dvswitch:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        datacenter: "{{ item.datacenter }}"
+        switch_name: "{{ item.name }}"
+        mtu: "{{ item.mtu }}"
+        uplink_quantity: "{{ item.uplink_quantity }}"
+        state: present
+      loop: "{{ vcenter_dvswitches }}"
+
+    - name: Create vlan portgroups
+      vmware_dvs_portgroup:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        portgroup_name: "{{ item.portgroup_name }}"
+        switch_name: "{{ item.switch_name}}"
+        vlan_id: "{{ item.vlan_id }}"
+        num_ports: "{{ item.num_ports | default(8) }}"
+        portgroup_type: "{{ item.portgroup_type | default('earlyBinding') }}"
+        state: present
+      loop: "{{ vcenter_dvs_portgroups }}"
+
+    - name: Add Hosts to dVSwitches
+      vmware_dvs_host:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        esxi_hostname: "{{ item.hostname }}"
+        switch_name: "{{ item.dvswitch }}"
+        vmnics: "{{ item.vmnics }}"
+        state: present
+      loop: "{{ vcenter_hosts }}"
+
+    # - name: Migrate Management vmk
+    #   vmware_migrate_vmk:
+    #     hostname: "{{ vcenter_hostname }}"
+    #     username: "{{ vcenter_username }}"
+    #     password: "{{ vcenter_password }}"
+    #     validate_certs: false
+    #     esxi_hostname: "{{ item.hostname }}"
+    #     device: "{{ item.old_vmnic }}"
+    #     current_switch_name: "{{ item.old_switch_name | default ('vSwitch0') }}"
+    #     current_portgroup_name: "{{ item.old_portgroup_name | default ('Management Network') }}"
+    #     migrate_switch_name: "{{ item.dvswitch }}"
+    #     migrate_portgroup_name: "{{ item.new_vmnic_portgroup }}"
+    #   loop: "{{ vcenter_hosts }}"
+
+    - name: Configure Management vmkernel port
+      vmware_vmkernel:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        esxi_hostname: "{{ item.hostname }}"
+        device: vmk0
+        dvswitch_name: "{{ item.dvswitch }}"
+        portgroup_name: "{{ item.new_vmnic_portgroup }}"
+        network:
+          type: dhcp
+        state: present
+        enable_mgmt: true
+        enable_vmotion: true
+        enable_vsan: true
+      loop: "{{ vcenter_hosts }}"

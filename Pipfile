@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-ansible = "==2.7.11"
+ansible = "==2.8.1"
 certbot-dns-cloudflare = "==0.35.1"
 dnspython = "==1.16.0"
 pyvmomi = "==6.7.1.2018.12"
