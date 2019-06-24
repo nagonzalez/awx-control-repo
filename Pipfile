@@ -9,6 +9,7 @@ verify_ssl = true
 ansible = "==2.8.1"
 certbot-dns-cloudflare = "==0.35.1"
 dnspython = "==1.16.0"
+nsxramlclient = "==2.0.7"
 pyvmomi = "==6.7.1.2018.12"
 requests = "==2.22.0"
 

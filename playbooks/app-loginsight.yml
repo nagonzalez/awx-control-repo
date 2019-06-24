@@ -1,0 +1,45 @@
+- hosts: 127.0.0.1
+  tasks:
+
+  - name: Create a VM folder for LogInsight
+    vcenter_folder:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      datacenter_name: "{{ loginsight_ovf.datacenter }}"
+      folder_name: "{{ loginsight_ovf.folder }}"
+      folder_type: vm
+      state: present
+
+  - name: Gather facts from loginsight vm
+    vmware_guest_facts:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      datacenter: "{{ loginsight_ovf.datacenter }}"
+      name: "{{ loginsight_ovf.vm_name }}"
+    register: l_loginsight_vm
+
+  - name: Deploy OVF
+    vmware_deploy_ovf:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      name: "{{ loginsight_ovf.vm_name }}"
+      datacenter: "{{ loginsight_ovf.datacenter }}"
+      cluster: "{{ loginsight_ovf.cluster }}"
+      folder: "{{ loginsight_ovf.datacenter }}/vm/{{ loginsight_ovf.folder }}"
+      datastore: "{{ loginsight_ovf.datastore }}"
+      networks: "{{ loginsight_ovf.networks }}"
+      ovf: "{{ loginsight_ovf.ova_path }}"
+      power_on: true
+      fail_on_spec_warnings: true
+      deployment_option: "{{ loginsight_ovf.deployment_option }}"
+      properties: "{{ loginsight_ovf.properties }}"
+    when: l_loginsight_vm.instance.hw_name != loginsight_ovf.vm_name
+
+# intial gui setup
+# vcenter registration

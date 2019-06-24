@@ -140,3 +140,6 @@
         enable_vmotion: true
         enable_vsan: true
       loop: "{{ vcenter_hosts }}"
+
+# alarm: disable Host hardware power status 
+# ha: disable admission control

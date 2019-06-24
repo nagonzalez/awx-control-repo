@@ -1,0 +1,47 @@
+- hosts: 127.0.0.1
+  tasks:
+
+  - name: Create a VM folder
+    vcenter_folder:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      datacenter_name: "{{ nsx_ovf.datacenter }}"
+      folder_name: "{{ nsx_ovf.folder }}"
+      folder_type: vm
+      state: present
+
+  - name: Gather facts from vm
+    vmware_guest_facts:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      datacenter: "{{ nsx_ovf.datacenter }}"
+      name: "{{ nsx_ovf.vm_name }}"
+    ignore_errors: true
+    register: l_nsx_vm
+
+  - name: Deploy OVF
+    vmware_deploy_ovf:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      name: "{{ nsx_ovf.vm_name }}"
+      datacenter: "{{ nsx_ovf.datacenter }}"
+      cluster: "{{ nsx_ovf.cluster }}"
+      folder: "{{ nsx_ovf.datacenter }}/vm/{{ nsx_ovf.folder }}"
+      datastore: "{{ nsx_ovf.datastore }}"
+      networks: "{{ nsx_ovf.networks }}"
+      ovf: "{{ nsx_ovf.ova_path }}"
+      power_on: true
+      fail_on_spec_warnings: true
+      properties: "{{ nsx_ovf.properties }}"
+    when: 
+      - l_nsx_vm.instance is not defined
+
+- hosts: 127.0.0.1
+  roles:
+    - nagonzalez.nsxv
