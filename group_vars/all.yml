@@ -37,6 +37,208 @@ cloudflare_dns_records:
     type: A
     value: 172.31.32.1
     ttl: 86400
+  - record: loginsight
+    type: A
+    value: 172.31.32.2
+    ttl: 86400
+  - record: nsx-manager
+    type: A
+    value: 172.31.32.3
+    ttl: 86400
+
+# ------------------------------------------------------------------------------
+# LOGINSIGHT
+# ------------------------------------------------------------------------------
+loginsight_ovf:
+  datacenter: garage
+  cluster: r610
+  datastore: vsanDatastore
+  folder: vmware
+  vm_name: loginsight
+  networks:
+    "Network 1": vlan-32-vmware-vsphere-mgmt
+  ova_path: /Users/noe.gonzalez/Downloads/VMware-vRealize-Log-Insight-4.8.0-13036238_OVF10.ova
+  deployment_option: xsmall
+  properties:
+    vami.hostname.VMware_vCenter_Log_Insight: loginsight.noeg.wtf
+    vami.ip0.VMware_vCenter_Log_Insight: 172.31.32.2
+    vami.netmask0.VMware_vCenter_Log_Insight: 255.255.255.0
+    vami.gateway.VMware_vCenter_Log_Insight: 172.31.32.254
+    vami.DNS.VMware_vCenter_Log_Insight: 172.31.3.2
+    vami.searchpath.VMware_vCenter_Log_Insight: noeg.wtf
+    vami.domain.VMware_vCenter_Log_Insight: noeg.wtf
+    vm.rootpw: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      37373230376236613035323961376531343933383135383237633065303464346333346330306266
+      6336323732373137386237656535363661636135663064370a346461303835643263383533353164
+      64363136633363656539633263313664383062303432316564363934636535323865363865643761
+      3261396534366364610a626662613966366362326539303037663062653266666361333461343338
+      3764
+    vm.sshkey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAPWyoqBkZIlGVjbMFJkNfMMWiTAxMvR2oThsGqHdjkSZypC2JogKlTFe+jBz9Gp7tEmiuU5r8yfANyvtGTVEjfrckXtqHc9HW5rjmdDyLoBVd1mlppsWnhO12xo4yt+61IeXrGhPzqflui+XyhmFvqdTk/8Kx/eizyHuHBXbovzmJab/ApQFv6gs4buTaepqWHSfetH4eLOHyvra/5b0VZyxoSdzuhcovsCARkOqRMVA2p4B+SYV4rfUK/Z2TVHuhN8Yx6JY83P2UcuGdha6HkfcIroPAQRvsqoZnUWo+gnZ2Hjzhs3lD1BuGvKQrmAJONvBa3JkOkEUI87aHLWv noe.gonzalez@dev.noe.local
+
+# ------------------------------------------------------------------------------
+# NSX
+# ------------------------------------------------------------------------------
+nsx_license: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  36373334663132646235356334636433396363386130333633366261346530306461346539346635
+  6263613935666263303232623533333365623333363565310a306263656432396165373637353531
+  32326137633536633066316462303631356630376234346232306331386461373866306462396264
+  6239346562363237650a616233386539633161346263386563336238316137623134376462373333
+  61616463646533643663616632646235343536316466343064353130323938313632
+nsx_ovf:
+  datacenter: garage
+  cluster: r610
+  datastore: vsanDatastore
+  folder: vmware
+  vm_name: nsx-manager
+  networks:
+    "Management Network": vlan-32-vmware-vsphere-mgmt
+  ova_path: /Users/noe.gonzalez/Downloads/VMware-NSX-Manager-6.4.5-13282012.ova
+  properties:
+    vsm_cli_passwd_0: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      65343965646530356663326231613139333763366666323562336565666131623434623266666336
+      6135376263353564646161336632326437383864313532370a383232313463363533303835616634
+      66346264323036356363353662303461656663326264636330653637386638373937653861323536
+      3938356239336635340a653831363465636565373730653832316536386361383432303663366439
+      6137
+    vsm_cli_en_passwd_0: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      65343965646530356663326231613139333763366666323562336565666131623434623266666336
+      6135376263353564646161336632326437383864313532370a383232313463363533303835616634
+      66346264323036356363353662303461656663326264636330653637386638373937653861323536
+      3938356239336635340a653831363465636565373730653832316536386361383432303663366439
+      6137
+    vsm_hostname: nsx-manager
+    vsm_ip_0: 172.31.32.3
+    vsm_netmask_0: 255.255.255.0
+    vsm_gateway_0: 172.31.32.254
+    vsm_dns1_0: 172.31.3.2
+    vsm_domain_0: noeg.wtf
+    vsm_ntp_0: '0.north-america.pool.ntp.org,1.north-america.pool.ntp.org,2.north-america.pool.ntp.org,3.north-america.pool.ntp.org'
+    vsm_isSSHEnabled: True
+    vsm_isCEIPEnabled: False
+
+nsx_manager_spec:
+  raml_file: /Users/noe.gonzalez/.ansible/roles/nagonzalez.nsxv/files/nsxvapi.raml
+  host: nsx-manager.noeg.wtf
+  user: admin
+  password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    65343965646530356663326231613139333763366666323562336565666131623434623266666336
+    6135376263353564646161336632326437383864313532370a383232313463363533303835616634
+    66346264323036356363353662303461656663326264636330653637386638373937653861323536
+    3938356239336635340a653831363465636565373730653832316536386361383432303663366439
+    6137
+
+nsx_controllers:
+  portgroup: vlan-32-vmware-vsphere-mgmt
+  password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    35323462666435326366663764323532623831616233353638303531363665666534383238343139
+    3334646430306235376236323432646532633264656464300a386539353138353963636439316633
+    33633431623830643963666232633361653336643132653230643266656632343138306639373439
+    3936313231373762610a633164383738363236656162613535616565643665623561613339376433
+    3231
+  deploytype: full
+  syslog_server: loginsight.noeg.wtf
+  ip_pool:
+    name: nsx-controllers
+    start_ip: 172.31.32.10
+    end_ip: 172.31.32.19
+    prefix_length: 24
+    gateway: 172.31.32.254
+    dns_server_1: 172.31.3.2
+    dns_server_2: ''
+
+nsx_vtep:
+  dvswitch_name: DSwitch
+  vlan_id: 33
+  segement_id_pool:
+    start: 5000
+    end: 5099
+    mcast_enabled: False
+  ip_pool:
+    name: nsx-vtep
+    start_ip: 172.31.33.10
+    end_ip: 172.31.33.19
+    prefix_length: 24
+    gateway: 172.31.33.254
+    dns_server_1: 172.31.3.2
+    dns_server_2: ''
+
+nsx_transport_zone:
+  name: nsx-transport-zone
+  description: Default Transport Zone
+  replication_mode: UNICAST_MODE
+
+nsx_logical_switches:
+  - name: 172-31-50-0-transport
+    transportzone: nsx-transport-zone
+    controlplanemode: UNICAST_MODE
+    description: virtual to physical connection
+  - name: 172-31-51-0-rancher
+    transportzone: nsx-transport-zone
+    controlplanemode: UNICAST_MODE
+    description: rancher network
+
+nsx_edge_router:
+  name: nsx-edge-service-gateway
+  description: edge service gateway to connect to physical world
+  interfaces:
+    vnic0: {ip: 172.31.32.253, prefix_len: 24, portgroup_id: "{{ vcenter_mgmt_portgroup_moid.object_id }}", name: uplink-vnic-vlan32, iftype: uplink}
+    vnic1: {ip: 172.31.50.253, prefix_len: 24, logical_switch: 172-31-50-0-transport, name: internal-vnic-vxlan50, iftype: internal}
+  default_gateway: 172.31.32.254
+  remote_access: True
+  username: admin
+  password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35323462666435326366663764323532623831616233353638303531363665666534383238343139
+          3334646430306235376236323432646532633264656464300a386539353138353963636439316633
+          33633431623830643963666232633361653336643132653230643266656632343138306639373439
+          3936313231373762610a633164383738363236656162613535616565643665623561613339376433
+          3231
+  firewall: False
+  ha_enabled: True
+
+nsx_ospf_edge:
+  edge_name: nsx-edge-service-gateway
+  router_id: 172.31.32.253
+  areas:
+    - { area_id: 0 }
+    - { area_id: 100 }
+  area_map:
+    - { area_id: 0, vnic: 0 }  
+    - { area_id: 100, vnic: 1 }
+
+nsx_dlr_router:
+  name: nsx-distributed-logical-router
+  description: distibuted logical router for virtual world
+  interfaces:
+    - {name: uplink-vnic-vxlan50, ip: 172.31.50.252, prefix_len: 24, logical_switch: 172-31-50-0-transport, iftype: uplink}
+    - {name: internal-vnic-vxlan51, ip: 172.31.51.252, prefix_len: 24, logical_switch: 172-31-51-0-rancher, iftype: internal}
+  default_gateway: 172.31.50.253
+  remote_access: True
+  username: admin
+  password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35323462666435326366663764323532623831616233353638303531363665666534383238343139
+          3334646430306235376236323432646532633264656464300a386539353138353963636439316633
+          33633431623830643963666232633361653336643132653230643266656632343138306639373439
+          3936313231373762610a633164383738363236656162613535616565643665623561613339376433
+          3231
+  ha_enabled: True
+
+nsx_ospf_dlr:
+  edge_name: nsx-distributed-logical-router
+  router_id: 172.31.50.252
+  protocol_address: 172.31.50.251
+  forwarding_address: 172.31.50.252
+  areas:
+    - { area_id: 100 }
+  area_map:
+    - { area_id: 100, vnic: 2 }
 
 # ------------------------------------------------------------------------------
 # VCENTER
