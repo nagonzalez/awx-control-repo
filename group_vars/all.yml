@@ -202,7 +202,7 @@ nsx_edge_router:
   firewall: False
   ha_enabled: True
 
-nsx_ospf_edge:
+nsx_ospf_esg:
   edge_name: nsx-edge-service-gateway
   router_id: 172.31.32.253
   areas:
