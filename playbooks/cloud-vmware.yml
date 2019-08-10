@@ -1,0 +1,36 @@
+- hosts: 127.0.0.1
+  gather_facts: no
+  tasks:
+    - name: create VM folder
+      vcenter_folder:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        datacenter_name: "{{ item.datacenter }}"
+        folder_name: "{{ item.folder }}"
+        folder_type: vm
+        state: present
+      loop: "{{ vmware_guest_vms }}"
+ 
+    - name: create VMs
+      vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        name: "{{ item.name }}"
+        folder: "{{ item.folder }}"
+        datacenter: "{{ item.datacenter }}"
+        cluster: "{{ item.cluster }}"
+        datastore: "{{ item.datastore }}"
+        hardware: "{{ item.hardware }}"
+        guest_id: "{{ item.guest_id }}"
+        networks: "{{ item.networks }}"
+        disk: "{{ item.disk }}"
+        template: "{{ item.template }}"
+        customization: "{{ item.customization }}"
+        wait_for_ip_address: True
+        state: present
+      loop: "{{ vmware_guest_vms }}"
+

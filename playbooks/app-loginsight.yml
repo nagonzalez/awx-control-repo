@@ -21,6 +21,7 @@
       datacenter: "{{ loginsight_ovf.datacenter }}"
       name: "{{ loginsight_ovf.vm_name }}"
     register: l_loginsight_vm
+    ignore_errors: true
 
   - name: Deploy OVF
     vmware_deploy_ovf:
@@ -39,7 +40,7 @@
       fail_on_spec_warnings: true
       deployment_option: "{{ loginsight_ovf.deployment_option }}"
       properties: "{{ loginsight_ovf.properties }}"
-    when: l_loginsight_vm.instance.hw_name != loginsight_ovf.vm_name
+    when: l_loginsight_vm.instance.hw_name not defined
 
 # intial gui setup
 # vcenter registration

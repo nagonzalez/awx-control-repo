@@ -1,29 +1,25 @@
 - hosts: app_esxi
   tasks:
 
-    - name: copy ssl cert
-      copy:
-        content: "{{ esxi_ssl_crt }}"
-        dest: /etc/vmware/ssl/rui.crt
-        backup: true
-        mode: 0644
-      register: l_ssl_cert
+    - name: Gets the host acceptance level
+      command: esxcli software acceptance get
+      register: esxcli_software_acceptance_get
+      changed_when: false
 
-    - name: copy ssl key
-      copy:
-        content: "{{ esxi_ssl_key }}"
-        dest: /etc/vmware/ssl/rui.key
-        backup: true
-        mode: 0644
-      register: l_ssl_key  
+    - name: Sets the host acceptance level
+      command: esxcli software acceptance set --level=CommunitySupported
+      when: 
+        - "'CommunitySupported' not in esxcli_software_acceptance_get.stdout"
 
-    - name: restart management services if certificate or key changed
-      command: "{{ item }}"
-      loop:
-        - /etc/init.d/hostd restart
-        - /etc/init.d/vpxa restart
+    - name: Lists the installed VIB packages 
+      command: esxcli software vib list
+      register: esxcli_software_vib_list
+      changed_when: false
+
+    - name: intall VNC VIB package
+      command: "esxcli software vib install -v {{ esxi_vnc_url }}"
       when:
-        - l_ssl_cert.changed or l_ssl_key.changed
+        - "'packer' not in esxcli_software_vib_list.stdout"
 
     - name: Configure NTP servers for an ESXi Host
       vmware_host_ntp:
@@ -32,6 +28,7 @@
         password: "{{ ansible_password }}"
         esxi_hostname: "{{ inventory_hostname }}"
         ntp_servers: "{{ esxi_ntp_servers }}"
+        validate_certs: false
       delegate_to: localhost
 
     - name: Start ntpd setting for an ESXi Host with Service policy
@@ -43,4 +40,5 @@
         service_name: ntpd
         service_policy: on
         state: present
+        validate_certs: false
       delegate_to: localhost

@@ -1,0 +1,3 @@
+- hosts: app_awx
+  roles:
+    - nagonzalez.awx

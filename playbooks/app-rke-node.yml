@@ -1,0 +1,3 @@
+- hosts: app_rke_node
+  roles:
+    - nagonzalez.rke-node
