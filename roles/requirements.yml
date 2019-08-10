@@ -1,4 +1,12 @@
-# base role
+# modules we want to use. Kinda like a Puppetfile
+- src: https://github.com/nagonzalez/ansible-role-ad
+  version: master
+  name: nagonzalez.ad
+
+- src: https://github.com/nagonzalez/ansible-role-awx
+  version: master
+  name: nagonzalez.awx
+
 - src: https://github.com/nagonzalez/ansible-role-base
   version: master
   name: nagonzalez.base
@@ -7,6 +15,18 @@
   version: master
   name: nagonzalez.edgeos
 
+- src: https://github.com/nagonzalez/ansible-role-jenkins
+  version: master
+  name: nagonzalez.jenkins
+
+- src: https://github.com/nagonzalez/ansible-role-local-path-provisioner
+  version: master
+  name: nagonzalez.local-path-provisioner
+
+- src: https://github.com/nagonzalez/ansible-role-nsxv
+  version: master
+  name: nagonzalez.nsxv
+
 - src: https://github.com/nagonzalez/ansible-role-pxe
   version: master
   name: nagonzalez.pxe
@@ -14,3 +34,19 @@
 - src: https://github.com/nagonzalez/ansible-role-rancher
   version: master
   name: nagonzalez.rancher
+
+- src: https://github.com/nagonzalez/ansible-role-rke
+  version: master
+  name: nagonzalez.rke
+
+- src: https://github.com/nagonzalez/ansible-role-rke-node
+  version: master
+  name: nagonzalez.rke-node
+
+- src: https://github.com/nagonzalez/ansible-role-spinnaker
+  version: master
+  name: nagonzalez.spinnaker
+
+- src: https://github.com/nagonzalez/ansible-role-vault
+  version: master
+  name: nagonzalez.vault
