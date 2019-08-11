@@ -15,6 +15,10 @@
   version: master
   name: nagonzalez.edgeos
 
+- src: https://github.com/nagonzalez/ansible-role-helm
+  version: master
+  name: nagonzalez.helm
+
 - src: https://github.com/nagonzalez/ansible-role-jenkins
   version: master
   name: nagonzalez.jenkins
