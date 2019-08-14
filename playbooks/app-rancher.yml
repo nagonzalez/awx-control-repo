@@ -1,3 +1,4 @@
 - hosts: app_rancher
   roles:
+    - nagonzalez.helm
     - nagonzalez.rancher
