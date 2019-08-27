@@ -27,9 +27,21 @@
   version: master
   name: nagonzalez.local-path-provisioner
 
+- src: https://github.com/nagonzalez/ansible-role-minio
+  version: master
+  name: nagonzalez.minio
+
+- src: https://github.com/nagonzalez/ansible-role-nfs-server-provisioner
+  version: master
+  name: nagonzalez.nfs-server-provisioner
+
 - src: https://github.com/nagonzalez/ansible-role-nsxv
   version: master
   name: nagonzalez.nsxv
+
+- src: https://github.com/nagonzalez/ansible-role-postgresql
+  version: master
+  name: nagonzalez.postgresql
 
 - src: https://github.com/nagonzalez/ansible-role-pxe
   version: master
