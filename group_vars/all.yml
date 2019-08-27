@@ -15,36 +15,29 @@ cloudflare_zone: noeg.wtf
 
 cloudflare_dns_records:
   # VLAN31: ESX HOSTS
-  - record: esx1
-    type: A
-    value: 172.31.31.1
-    ttl: 86400
-  - record: esx2
-    type: A
-    value: 172.31.31.2
-    ttl: 86400
-  - record: esx3
-    type: A
-    value: 172.31.31.3
-    ttl: 86400
-  - record: esx4
-    type: A
-    value: 172.31.31.4
-    ttl: 86400
+  - { record: esx1, type: A, value: 172.31.31.1, ttl: 86400}
+  - { record: esx2, type: A, value: 172.31.31.2, ttl: 86400}
+  - { record: esx3, type: A, value: 172.31.31.3, ttl: 86400}
+  - { record: esx4, type: A, value: 172.31.31.4, ttl: 86400}
 
   # VLAN32: vCenter stuff
-  - record: vcenter
-    type: A
-    value: 172.31.32.1
-    ttl: 86400
-  - record: loginsight
-    type: A
-    value: 172.31.32.2
-    ttl: 86400
-  - record: nsx-manager
-    type: A
-    value: 172.31.32.3
-    ttl: 86400
+  - { record: vcenter, type: A, value: 172.31.32.1, ttl: 86400}
+  - { record: loginsight, type: A, value: 172.31.32.2, ttl: 86400}
+  - { record: nsx-manager, type: A, value: 172.31.32.3, ttl: 86400}
+
+  # VXLAN51: Rancher stuff
+  - { record: rke-master-1, type: A, value: 172.31.51.1, ttl: 86400}
+  - { record: rke-master-2, type: A, value: 172.31.51.2, ttl: 86400}
+  - { record: rke-master-3, type: A, value: 172.31.51.3, ttl: 86400}
+  - { record: rke-worker-1, type: A, value: 172.31.51.11, ttl: 86400}
+  - { record: rke-worker-2, type: A, value: 172.31.51.12, ttl: 86400}
+  - { record: rke-worker-3, type: A, value: 172.31.51.13, ttl: 86400}
+  - { record: rancher, type: A, value: 172.31.50.253, ttl: 86400}
+  - { record: rancher.molecule, type: A, value: 172.28.128.3, ttl: 86400}
+  - { record: '*.apps', type: A, value: 172.31.50.253, ttl: 86400}
+  
+  # VXLAN51: Windows stuff
+  - { record: dc.internal, type: A, value: 172.31.51.4, ttl: 86400}
 
 # ------------------------------------------------------------------------------
 # LOGINSIGHT
@@ -239,6 +232,204 @@ nsx_ospf_dlr:
     - { area_id: 100 }
   area_map:
     - { area_id: 100, vnic: 2 }
+
+# ------------------------------------------------------------------------------
+# VMWARE
+# ------------------------------------------------------------------------------
+vmware_guest_vms:
+  - name: dc
+    folder: windows
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 2
+      memory_mb: 4096
+    guest_id: windows9Server64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.4
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 62914560
+        type: thin
+      - size_gb: 10
+        type: thin
+    template: template-windows-2019-1562131046
+    customization:
+      hostname: dc
+      dns_servers:
+        - 127.0.0.1
+        - 172.31.3.2
+      domain: internal.noeg.wtf
+      dns_suffix: internal.noeg.wtf
+
+  - name: rke-master-1
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 2
+      memory_mb: 8192
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.1
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-master-1
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
+  - name: rke-master-2
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 2
+      memory_mb: 8192
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.2
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-master-2
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
+  - name: rke-master-3
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 2
+      memory_mb: 8192
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.3
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-master-3
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
+  - name: rke-worker-1
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 8
+      num_cpu_cores_per_socket: 4
+      memory_mb: 16384
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.11
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-worker-1
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
+  - name: rke-worker-2
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 8
+      num_cpu_cores_per_socket: 4
+      memory_mb: 16384
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.12
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-worker-2
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
+  - name: rke-worker-3
+    folder: rancher
+    datacenter: garage
+    cluster: r610
+    datastore: vsanDatastore
+    hardware:
+      num_cpus: 8
+      num_cpu_cores_per_socket: 4
+      memory_mb: 16384
+    guest_id: centos7_64Guest
+    networks:
+      - name: vxw-dvs-15-virtualwire-2-sid-5001-172-31-51-0-rancher
+        ip: 172.31.51.13
+        netmask: 255.255.255.0
+        gateway: 172.31.51.252
+    disk:
+      - size_kb: 40960000
+        type: thin
+      - size_gb: 200
+        type: thin
+    template: template-centos-7.6-1561609147
+    customization:
+      hostname: rke-worker-3
+      domain: noeg.wtf
+      dns_servers:
+        - 172.31.3.2
+        - 1.1.1.1
+      dns_suffix: noeg.wtf
 
 # ------------------------------------------------------------------------------
 # VCENTER
