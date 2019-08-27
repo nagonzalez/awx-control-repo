@@ -8,9 +8,9 @@ ansible_password: !vault |
   3561316666613361640a343161326430656538623461376437626239613232386566366632303466
   6338
 
-
 esxi_ntp_servers:
   - 0.north-america.pool.ntp.org
   - 1.north-america.pool.ntp.org
   - 2.north-america.pool.ntp.org
   - 3.north-america.pool.ntp.org
+esxi_vnc_url: http://github.com/umich-vci/packer-vib/releases/download/v1.0.0-1/packer.vib
