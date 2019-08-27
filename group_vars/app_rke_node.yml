@@ -1,0 +1,12 @@
+# ------------------------------------------------------------------------------
+# LVM
+# ------------------------------------------------------------------------------
+lvm_data_disk: true
+lvm_data_pvs: /dev/sdb
+lvm_data_mount: /var/lib/docker
+
+# ------------------------------------------------------------------------------
+# RKE
+# ------------------------------------------------------------------------------
+rke_node_user: packer
+rke_node_user_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAPWyoqBkZIlGVjbMFJkNfMMWiTAxMvR2oThsGqHdjkSZypC2JogKlTFe+jBz9Gp7tEmiuU5r8yfANyvtGTVEjfrckXtqHc9HW5rjmdDyLoBVd1mlppsWnhO12xo4yt+61IeXrGhPzqflui+XyhmFvqdTk/8Kx/eizyHuHBXbovzmJab/ApQFv6gs4buTaepqWHSfetH4eLOHyvra/5b0VZyxoSdzuhcovsCARkOqRMVA2p4B+SYV4rfUK/Z2TVHuhN8Yx6JY83P2UcuGdha6HkfcIroPAQRvsqoZnUWo+gnZ2Hjzhs3lD1BuGvKQrmAJONvBa3JkOkEUI87aHLWv noe.gonzalez@dev.noe.local
