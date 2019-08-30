@@ -11,6 +11,10 @@
   version: master
   name: nagonzalez.base
 
+- src: https://github.com/nagonzalez/ansible-role-cert-manager
+  version: master
+  name: nagonzalez.cert-manager
+
 - src: https://github.com/nagonzalez/ansible-role-edgeos
   version: master
   name: nagonzalez.edgeos
