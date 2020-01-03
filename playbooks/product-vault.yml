@@ -1,0 +1,3 @@
+- hosts: product_vault
+  roles:
+    - ansible-role-vault
