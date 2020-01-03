@@ -7,9 +7,8 @@ verify_ssl = true
 
 [packages]
 ansible = "==2.9.1"
-certbot-dns-cloudflare = "==0.35.1"
 dnspython = "==1.16.0"
-nsxramlclient = "==2.0.7"
+hvac = "==0.9.6"
 pyhelm = "==0.1.5"
 pyvmomi = "==6.7.1.2018.12"
 pywinrm = "==0.3.0"

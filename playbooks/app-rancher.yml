@@ -1,5 +1,0 @@
-- hosts: app_rancher
-  roles:
-    - nagonzalez.helm
-    - nagonzalez.cert-manager
-    - nagonzalez.rancher

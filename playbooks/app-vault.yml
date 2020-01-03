@@ -1,3 +1,0 @@
-- hosts: app_vault
-  roles:
-    - nagonzalez.vault

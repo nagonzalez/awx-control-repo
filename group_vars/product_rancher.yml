@@ -71,6 +71,6 @@ rancher_helm_chart:
       tls:
         source: secret
 
-rancher_ssl_crt: "{{ l_ssl_cert + l_ssl_ca }}"
-rancher_ssl_key: "{{ l_ssl_key }}"
+rancher_ssl_crt: "{{ env_wildcard_ssl_cert + env_wildcard_ssl_ca }}"
+rancher_ssl_key: "{{ env_wildcard_ssl_key }}"
 

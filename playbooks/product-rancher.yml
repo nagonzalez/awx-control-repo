@@ -27,7 +27,7 @@
             namespace: cattle-system
           type: Opaque
           data:
-            cacerts.pem: "{{ l_ssl_ca | b64encode }}"
+            cacerts.pem: "{{ env_wildcard_ssl_ca | b64encode }}"
 
 - hosts: product_rancher
   roles:
