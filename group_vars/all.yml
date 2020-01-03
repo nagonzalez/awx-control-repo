@@ -35,9 +35,7 @@ cloudflare_dns_records:
   - { record: rancher, type: A, value: 172.31.50.253, ttl: 86400}
   - { record: rancher.molecule, type: A, value: 172.28.128.3, ttl: 86400}
   - { record: '*.apps', type: A, value: 172.31.50.253, ttl: 86400}
-  
-  # VXLAN51: Windows stuff
-  - { record: dc.internal, type: A, value: 172.31.51.4, ttl: 86400}
+
 
 # ------------------------------------------------------------------------------
 # LOGINSIGHT
@@ -202,7 +200,7 @@ nsx_ospf_esg:
     - { area_id: 0 }
     - { area_id: 100 }
   area_map:
-    - { area_id: 0, vnic: 0 }  
+    - { area_id: 0, vnic: 0 }
     - { area_id: 100, vnic: 1 }
 
 nsx_dlr_router:
@@ -510,7 +508,7 @@ vcenter_hosts:
       6363323565643962310a633534363930393931333236303537316162373166366433613037616230
       3434
     datacenter: garage
-    cluster: r610  
+    cluster: r610
     license: 4169M-ZY1E5-W8W8X-0J226-ATPQ0
     dvswitch: DSwitch
     vmnics:
