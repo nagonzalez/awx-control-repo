@@ -1,0 +1,6 @@
+---
+- hosts: product_rke
+  roles:
+    - ansible-role-mounts
+    - ansible-role-rke-node
+    - ansible-role-rke

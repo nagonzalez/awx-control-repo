@@ -1,0 +1,35 @@
+---
+- hosts: product_rancher
+  roles:
+    - ansible-role-helm
+    - ansible-role-cert-manager
+
+- name: confgure Rancher to trust private CA
+  hosts: product_rancher
+  tasks:
+    - name: create cattle-system namespace
+      k8s:
+        state: present
+        definition: |
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: cattle-system
+
+    - name: add cacerts.pem to cattle-system namespace
+      k8s:
+        state: present
+        definition: |
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: tls-ca
+            namespace: cattle-system
+          type: Opaque
+          data:
+            cacerts.pem: "{{ l_ssl_ca | b64encode }}"
+
+- hosts: product_rancher
+  roles:
+    - ansible-role-rancher
+    - ansible-role-local-path-provisioner

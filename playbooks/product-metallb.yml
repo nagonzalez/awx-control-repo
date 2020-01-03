@@ -1,0 +1,4 @@
+---
+- hosts: product_metallb
+  roles:
+    - ansible-role-metallb
