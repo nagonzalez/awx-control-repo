@@ -2,10 +2,3 @@
 # Ansible config
 ansible_become: true
 ansible_user: packer
-
-# SSH config
-ssh_admin_users:
-  - name: packer
-    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAPWyoqBkZIlGVjbMFJkNfMMWiTAxMvR2oThsGqHdjkSZypC2JogKlTFe+jBz9Gp7tEmiuU5r8yfANyvtGTVEjfrckXtqHc9HW5rjmdDyLoBVd1mlppsWnhO12xo4yt+61IeXrGhPzqflui+XyhmFvqdTk/8Kx/eizyHuHBXbovzmJab/ApQFv6gs4buTaepqWHSfetH4eLOHyvra/5b0VZyxoSdzuhcovsCARkOqRMVA2p4B+SYV4rfUK/Z2TVHuhN8Yx6JY83P2UcuGdha6HkfcIroPAQRvsqoZnUWo+gnZ2Hjzhs3lD1BuGvKQrmAJONvBa3JkOkEUI87aHLWv noe.gonzalez@dev.noe.local
-  - name: root
-    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAPWyoqBkZIlGVjbMFJkNfMMWiTAxMvR2oThsGqHdjkSZypC2JogKlTFe+jBz9Gp7tEmiuU5r8yfANyvtGTVEjfrckXtqHc9HW5rjmdDyLoBVd1mlppsWnhO12xo4yt+61IeXrGhPzqflui+XyhmFvqdTk/8Kx/eizyHuHBXbovzmJab/ApQFv6gs4buTaepqWHSfetH4eLOHyvra/5b0VZyxoSdzuhcovsCARkOqRMVA2p4B+SYV4rfUK/Z2TVHuhN8Yx6JY83P2UcuGdha6HkfcIroPAQRvsqoZnUWo+gnZ2Hjzhs3lD1BuGvKQrmAJONvBa3JkOkEUI87aHLWv noe.gonzalez@dev.noe.local
