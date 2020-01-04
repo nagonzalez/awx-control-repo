@@ -1,4 +1,4 @@
-- hosts: app_esxi
+- hosts: product_esxi
   tasks:
 
     - name: Gets the host acceptance level
@@ -8,16 +8,16 @@
 
     - name: Sets the host acceptance level
       command: esxcli software acceptance set --level=CommunitySupported
-      when: 
+      when:
         - "'CommunitySupported' not in esxcli_software_acceptance_get.stdout"
 
-    - name: Lists the installed VIB packages 
+    - name: Lists the installed VIB packages
       command: esxcli software vib list
       register: esxcli_software_vib_list
       changed_when: false
 
     - name: intall VNC VIB package
-      command: "esxcli software vib install -v {{ esxi_vnc_url }}"
+      command: "esxcli software vib install -v {{ esxi_packer_vib }}"
       when:
         - "'packer' not in esxcli_software_vib_list.stdout"
 
