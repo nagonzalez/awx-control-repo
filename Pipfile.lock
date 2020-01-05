@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5aa3a5b6231a98c029a18024cdb988bb35de0438bbe8724b5233621d42eeac34"
+            "sha256": "5837d9f4835260e77ac5af0bdb0bd24b845c22a068d60edfb30017382f81d8af"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -18,10 +18,10 @@
     "default": {
         "ansible": {
             "hashes": [
-                "sha256:d87cb25df02284d59226ff1d935d7075a175f31d0db83564c2f1ca28bbbd4cb4"
+                "sha256:2f83f8ccc50640aa41a24f6e7757ac06b0ee6189fdcaacab68851771d3b42f3a"
             ],
             "index": "pypi",
-            "version": "==2.9.1"
+            "version": "==2.9.2"
         },
         "boto3": {
             "hashes": [
@@ -114,14 +114,6 @@
                 "sha256:fb81c17e0ebe3358486cd8cc3ad78adbae58af12fc2bf2bc0bb84e8090fa5ce8"
             ],
             "version": "==2.8"
-        },
-        "dnspython": {
-            "hashes": [
-                "sha256:36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01",
-                "sha256:f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"
-            ],
-            "index": "pypi",
-            "version": "==1.16.0"
         },
         "docutils": {
             "hashes": [
@@ -303,13 +295,6 @@
             ],
             "version": "==1.1.1"
         },
-        "ntlm-auth": {
-            "hashes": [
-                "sha256:11f7a3cec38155b7cecdd9bbc8c37cd738d8012f0523b3f98d8caefe394feb97",
-                "sha256:350f2389c8ee5517f47db55a36ac2f8efc9742a60a678d6e2caa92385bdcaa9a"
-            ],
-            "version": "==1.4.0"
-        },
         "protobuf": {
             "hashes": [
                 "sha256:0329e86a397db2a83f9dcbe21d9be55a47f963cdabc893c3a24f4d3a8f117c37",
@@ -356,18 +341,10 @@
         },
         "pyvmomi": {
             "hashes": [
-                "sha256:653f978fd14474a1d3ffc22b1fdffa8a406987ada4ef6d13d96a37ef4b038891"
+                "sha256:d639d09eb3c7b118bc83b48472c27a4567dcc128dac0ac25ee2c03ed6afbe584"
             ],
             "index": "pypi",
-            "version": "==6.7.1.2018.12"
-        },
-        "pywinrm": {
-            "hashes": [
-                "sha256:799fc3e33fec8684443adf5778860388289102ea4fa1458f1bf307d167855573",
-                "sha256:ade21b22c72eb3e2e4656798c232ee5f7ce07d157184561eec50691502bc7464"
-            ],
-            "index": "pypi",
-            "version": "==0.3.0"
+            "version": "==6.7.3"
         },
         "pyyaml": {
             "hashes": [
@@ -392,13 +369,6 @@
             ],
             "index": "pypi",
             "version": "==2.22.0"
-        },
-        "requests-ntlm": {
-            "hashes": [
-                "sha256:1eb43d1026b64d431a8e0f1e8a8c8119ac698e72e9b95102018214411a8463ea",
-                "sha256:9189c92e8c61ae91402a64b972c4802b2457ce6a799d658256ebf084d5c7eb71"
-            ],
-            "version": "==1.1.0"
         },
         "s3transfer": {
             "hashes": [
@@ -434,13 +404,6 @@
             ],
             "markers": "python_version >= '3.4'",
             "version": "==1.25.7"
-        },
-        "xmltodict": {
-            "hashes": [
-                "sha256:50d8c638ed7ecb88d90561beedbf720c9b4e851a9fa6c47ebd64e99d166d8a21",
-                "sha256:8bbcb45cc982f48b2ca8fe7e7827c5d792f217ecf1792626f808bf41c3b86051"
-            ],
-            "version": "==0.12.0"
         }
     },
     "develop": {}

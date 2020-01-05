@@ -6,12 +6,10 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-ansible = "==2.9.1"
-dnspython = "==1.16.0"
+ansible = "==2.9.2"
 hvac = "==0.9.6"
 pyhelm = "==0.1.5"
-pyvmomi = "==6.7.1.2018.12"
-pywinrm = "==0.3.0"
+pyvmomi = "==6.7.3"
 requests = "==2.22.0"
 
 [requires]

@@ -1,4 +1,4 @@
-- hosts: 127.0.0.1
+- hosts: localhost
   gather_facts: no
   tasks:
     - name: create VM folder
@@ -12,7 +12,7 @@
         folder_type: vm
         state: present
       loop: "{{ vmware_guest_vms }}"
- 
+
     - name: create VMs
       vmware_guest:
         hostname: "{{ vcenter_hostname }}"
