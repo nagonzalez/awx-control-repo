@@ -14,4 +14,4 @@ metallb_config:
       - name: default
         protocol: layer2
         addresses:
-        - 172.31.32.2-172.31.32.100
+        - 172.31.32.11-172.31.32.100
