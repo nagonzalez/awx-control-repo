@@ -1,0 +1,33 @@
+# ------------------------------------------------------------------------------
+# VMWARE
+# ------------------------------------------------------------------------------
+vcenter_hostname: vcenter.noeg.wtf
+vcenter_username: administrator@vsphere.local
+vcenter_password: "{{ global_secrets['data']['password'] }}"
+
+vmware_guest_vms:
+  - name: unifi
+    folder: ubnt
+    datacenter: garage
+    cluster: r610
+    datastore: esx4-ssd1
+    hardware:
+      num_cpus: 1
+      memory_mb: 2048
+    guest_id: centos7_64Guest
+    networks:
+      - name: vlan32
+        ip: 172.31.32.201
+        netmask: 255.255.255.0
+        gateway: 172.31.32.254
+    disk:
+      - size_kb: 40960000
+        type: thin
+    template: template-centos-7.6-1578118469
+    customization:
+      hostname: unifi
+      domain: noeg.wtf
+      dns_servers:
+        - 1.1.1.1
+        - 8.8.8.8
+      dns_suffix: noeg.wtf
