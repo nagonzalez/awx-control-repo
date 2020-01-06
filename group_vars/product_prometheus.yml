@@ -121,11 +121,11 @@ prometheus_operator_helm_chart:
         ## Prometheus StorageSpec for persistent data
         ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
         ##
-        storageSpec:
-         volumeClaimTemplate:
-           spec:
-             storageClassName: local-path
-             accessModes: ["ReadWriteOnce"]
-             resources:
-               requests:
-                 storage: 50Gi
+        storageSpec: {}
+        #  volumeClaimTemplate:
+        #    spec:
+        #      storageClassName: local-path
+        #      accessModes: ["ReadWriteOnce"]
+        #      resources:
+        #        requests:
+        #          storage: 50Gi
