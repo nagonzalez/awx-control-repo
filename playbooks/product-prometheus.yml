@@ -1,0 +1,4 @@
+---
+- hosts: product_prometheus
+  roles:
+    - ansible-role-prometheus

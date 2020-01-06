@@ -1,0 +1,131 @@
+---
+prometheus_operator_helm_chart:
+  name: prometheus-operator
+  version: 8.5.2
+  release: prometheus-operator
+  namespace: prometheus-operator
+  source:
+    type: repo
+    location: https://kubernetes-charts.storage.googleapis.com
+  state: present
+  values:
+
+    ## Configuration for alertmanager
+    ## ref: https://prometheus.io/docs/alerting/alertmanager/
+    ##
+    alertmanager:
+
+      ingress:
+        enabled: true
+
+        ## Hosts must be provided if Ingress is enabled.
+        ##
+        hosts:
+          - alertmanager.dev.noeg.wtf
+
+        ## TLS configuration for Alertmanager Ingress
+        ## Secret must be manually created in the namespace
+        ##
+        tls:
+        - hosts:
+          - alertmanager.dev.noeg.wtf
+
+    ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
+    ##
+    grafana:
+      enabled: false
+
+    ## Component scraping the kube api server
+    ##
+    kubeApiServer:
+      enabled: false
+
+    ## Component scraping the kube controller manager
+    ##
+    kubeControllerManager:
+      enabled: false
+
+    ## Component scraping coreDns. Use either this or kubeDns
+    ##
+    coreDns:
+      enabled: false
+
+    ## Component scraping etcd
+    ##
+    kubeEtcd:
+      enabled: false
+
+    ## Component scraping kube scheduler
+    ##
+    kubeScheduler:
+      enabled: false
+
+    ## Component scraping kube proxy
+    ##
+    kubeProxy:
+      enabled: false
+
+    ## Component scraping kube state metrics
+    ##
+    kubeStateMetrics:
+      enabled: false
+
+    ## Deploy node exporter as a daemonset to all nodes
+    ##
+    nodeExporter:
+      enabled: false
+
+    ## Manages Prometheus and Alertmanager components
+    ##
+    prometheusOperator:
+      ## Deploy CRDs used by Prometheus Operator.
+      ##
+      createCustomResource: false
+
+    ## Deploy a Prometheus instance
+    ##
+    prometheus:
+      ingress:
+        enabled: true
+
+        ## Hostnames.
+        ## Must be provided if Ingress is enabled.
+        ##
+        hosts:
+          - prometheus.dev.noeg.wtf
+
+        ## TLS configuration for Prometheus Ingress
+        ## Secret must be manually created in the namespace
+        ##
+        tls:
+          - hosts:
+              - prometheus.dev.noeg.wtf
+
+      ## Settings affecting prometheusSpec
+      ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+      ##
+      prometheusSpec:
+
+        ## If true, a nil or {} value for prometheus.prometheusSpec.ruleSelector will cause the
+        ## prometheus resource to be created with selectors based on values in the helm deployment,
+        ## which will also match the PrometheusRule resources created
+        ##
+        ruleSelectorNilUsesHelmValues: false
+
+        ## If true, a nil or {} value for prometheus.prometheusSpec.serviceMonitorSelector will cause the
+        ## prometheus resource to be created with selectors based on values in the helm deployment,
+        ## which will also match the servicemonitors created
+        ##
+        serviceMonitorSelectorNilUsesHelmValues: false
+
+        ## Prometheus StorageSpec for persistent data
+        ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
+        ##
+        storageSpec:
+         volumeClaimTemplate:
+           spec:
+             storageClassName: local-path
+             accessModes: ["ReadWriteOnce"]
+             resources:
+               requests:
+                 storage: 50Gi
