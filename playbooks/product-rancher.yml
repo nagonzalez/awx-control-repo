@@ -4,32 +4,28 @@
     - ansible-role-helm
     - ansible-role-cert-manager
 
-- name: confgure Rancher to trust private CA
-  hosts: product_rancher
-  tasks:
-    - name: create cattle-system namespace
-      k8s:
-        state: present
-        definition: |
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: cattle-system
-
-    - name: add cacerts.pem to cattle-system namespace
-      k8s:
-        state: present
-        definition: |
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: tls-ca
-            namespace: cattle-system
-          type: Opaque
-          data:
-            cacerts.pem: "{{ env_wildcard_ssl_ca | b64encode }}"
-
 - hosts: product_rancher
   roles:
     - ansible-role-rancher
     - ansible-role-local-path-provisioner
+
+- hosts: product_rancher
+  tasks:
+    - name: patch ingress
+      k8s:
+        state: present
+        definition: |
+          apiVersion: extensions/v1beta1
+          kind: Ingress
+          metadata:
+            name: rancher
+            namespace: cattle-system
+            annotations:
+              certmanager.k8s.io/acme-challenge-type: dns01
+              certmanager.k8s.io/acme-dns01-provider: cloudflare
+              certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+          spec:
+            tls:
+            - hosts:
+              - {{ rancher_helm_chart['values']['hostname'] }}
+              secretName: rancher-tls-prod

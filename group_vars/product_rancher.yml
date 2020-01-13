@@ -65,12 +65,4 @@ rancher_helm_chart:
   state: present
   values:
     hostname: rancher.dev.noeg.wtf
-    privateCA: true
     replicas: 1
-    ingress:
-      tls:
-        source: secret
-
-rancher_ssl_crt: "{{ env_wildcard_ssl_cert + env_wildcard_ssl_ca }}"
-rancher_ssl_key: "{{ env_wildcard_ssl_key }}"
-
