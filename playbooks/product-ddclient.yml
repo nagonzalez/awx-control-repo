@@ -1,0 +1,72 @@
+---
+- hosts: product_ddclient
+  tasks:
+
+    - name: create ddclient namespace
+      k8s:
+        state: present
+        definition: |
+          kind: Namespace
+          metadata:
+            name: ddclient
+
+    - name: create ddclient configmap
+      k8s:
+        state: present
+        definition: |
+          kind: ConfigMap
+          metadata:
+            name: ddclient-config
+            namespace: ddclient
+          data:
+            ddclient.conf: |
+              ssl=yes
+              protocol=cloudflare
+              ttl=1
+              login=noe.a.gonzalez@gmail.com
+              password={{ global_secrets['data']['cloudflare_api_key'] }}
+              use=web
+              zone=noeg.wtf
+              vpn.noeg.wtf
+
+    - name: create ddclient deployment
+      k8s:
+        state: present
+        definition: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ddclient
+            namespace: ddclient
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: ddclient
+            template:
+              metadata:
+                labels:
+                  app: ddclient
+              spec:
+                containers:
+                - name: ddclient
+                  image: linuxserver/ddclient:amd64-3.9.0-ls23
+                  volumeMounts:
+                  - mountPath: /config
+                    name: ddclient-data
+                initContainers:
+                  - name: init-config
+                    image: busybox:latest
+                    command: ['sh', '-c', 'sleep 10 && cp /tmp/ddclient.conf /config/ddclient.conf']
+                    volumeMounts:
+                    - mountPath: /tmp
+                      name: ddclient-config
+                    - mountPath: /config
+                      name: ddclient-data
+
+                volumes:
+                  - name: ddclient-config
+                    configMap:
+                      name: ddclient-config
+                  - name: ddclient-data
+                    emptyDir: {}
