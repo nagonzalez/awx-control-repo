@@ -1,0 +1,3 @@
+- hosts: product_jenkins
+  roles:
+    - ansible-role-jenkins
