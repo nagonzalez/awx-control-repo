@@ -9,7 +9,7 @@ helm_version: 2.16.1
 # ------------------------------------------------------------------------------
 cert_manager_helm_chart:
   name: cert-manager
-  version: v0.9.1
+  version: v0.12.0
   release: cert-manager
   namespace: cert-manager
   source:
@@ -29,7 +29,7 @@ cert_manager_secrets:
       api-key: "{{ cloudflare_account_api_token | b64encode }}"
 
 cert_manager_cluster_issuers:
-  - apiVersion: certmanager.k8s.io/v1alpha1
+  - apiVersion: cert-manager.io/v1alpha2
     kind: ClusterIssuer
     metadata:
       name: letsencrypt-prod
@@ -52,7 +52,7 @@ cert_manager_cluster_issuers:
 # ------------------------------------------------------------------------------
 # RANCHER
 # ------------------------------------------------------------------------------
-rancher_version: 2.3.3
+rancher_version: 2.3.4
 
 rancher_helm_chart:
   name: rancher
