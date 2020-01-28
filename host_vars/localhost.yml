@@ -31,3 +31,30 @@ vmware_guest_vms:
         - 1.1.1.1
         - 8.8.8.8
       dns_suffix: noeg.wtf
+  - name: centos
+    folder: jenkins
+    datacenter: garage
+    cluster: r610
+    datastore: esx4-ssd1
+    hardware:
+      num_cpus: 6
+      memory_mb: 6144
+    guest_id: centos7_64Guest
+    networks:
+      - name: vlan32
+        ip: 172.31.32.5
+        netmask: 255.255.255.0
+        gateway: 172.31.32.254
+    disk:
+      - size_gb: 40
+        type: thin
+      - size_gb: 100
+        type: thin
+    template: template-centos-7.6-1578118469
+    customization:
+      hostname: centos
+      domain: noeg.wtf
+      dns_servers:
+        - 1.1.1.1
+        - 8.8.8.8
+      dns_suffix: noeg.wtf
