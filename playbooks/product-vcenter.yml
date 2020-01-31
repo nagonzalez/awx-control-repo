@@ -1,0 +1,55 @@
+- hosts: product_rke
+  vars:
+    vcenter_internal_name: vcenter.noeg.wtf
+    vcenter_external_name: vcenter.dev.noeg.wtf
+  tasks:
+    - name: create vcenter namespace
+      k8s:
+        state: present
+        definition: |
+            kind: Namespace
+            metadata:
+              name: vcenter
+
+    - name: create external vcenter k8s service
+      k8s:
+        state: present
+        definition: |
+          kind: Service
+          apiVersion: v1
+          metadata:
+            name: vcenter
+            namespace: vcenter
+          spec:
+            type: ExternalName
+            externalName: {{ vcenter_internal_name }}
+
+    - name: create vcenter k8s ingress
+      k8s:
+        state: present
+        definition: |
+          apiVersion: networking.k8s.io/v1beta1
+          kind: Ingress
+          metadata:
+            name: vcenter
+            namespace: vcenter
+            annotations:
+              ingress.kubernetes.io/preserve-host: "false"
+              kubernetes.io/ingress.class: nginx
+              ingress.kubernetes.io/ssl-redirect: 'true'
+              certmanager.k8s.io/acme-challenge-type: dns01
+              certmanager.k8s.io/acme-dns01-provider: cloudflare
+              certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          spec:
+            rules:
+            - host: {{ vcenter_external_name }}
+              http:
+                paths:
+                - backend:
+                    serviceName: vcenter
+                    servicePort: 443
+            tls:
+            - hosts:
+              - {{ vcenter_external_name }}
+              secretName: vcenter-tls-prod
