@@ -1,0 +1,72 @@
+- hosts: product_jenkins_centos
+  vars:
+    required_pacakges:
+      - bzip2
+      - bzip2-devel
+      - gcc
+      - git
+      - java-1.8.0-openjdk
+      - libffi-devel
+      - openssl-devel
+      - python2-pip
+      - readline-devel
+      - sqlite
+      - sqlite-devel
+      - tk-devel
+      - zlib-devel
+  tasks:
+  - name: intall required packages
+    package:
+      name: "{{ required_pacakges }}"
+      state: present
+
+  - name: clone pyenv
+    git:
+      repo: https://github.com/pyenv/pyenv.git
+      dest: ~/.pyenv
+
+  - name: update bash_profile
+    lineinfile:
+      path: ~/.bash_profile
+      line: "{{ item }}"
+    loop:
+      - 'export PYENV_ROOT="$HOME/.pyenv"'
+      - 'export PATH="$PYENV_ROOT/bin:$PATH"'
+      # if command -v pyenv 1>/dev/null 2>&1; then
+      #   eval "$(pyenv init -)"
+      # fi
+
+  # install python 3.8
+  # pyenv install 3.8.1
+
+  # poops out complaining about python 2.7
+  # - name: install pipenv
+  #   pip:
+  #     name: pipenv
+
+  - name: add vbox yum repo
+    yum_repository:
+        name: virtualbox # required. Unique repository ID. This option builds the section name of the repository in the repo file.,This parameter is only required if I(state) is set to C(present) or C(absent).
+        description: Oracle Linux / RHEL / CentOS-$releasever / $basearch - VirtualBox # not required. A human readable string describing the repository. This option corresponds to the "name" property in the repo file.,This parameter is only required if I(state) is set to C(present).
+        baseurl: http://download.virtualbox.org/virtualbox/rpm/el/$releasever/$basearch # not required. URL to the directory where the yum repository's 'repodata' directory lives.,It can also be a list of multiple URLs.,This, the I(metalink) or I(mirrorlist) parameters are required if I(state) is set to C(present).
+        enabled: true # not required. This tells yum whether or not use this repository.
+        repo_gpgcheck: true
+        gpgcheck: true # not required. Tells yum whether or not it should perform a GPG signature check on packages.
+        gpgkey: https://www.virtualbox.org/download/oracle_vbox.asc # not required. A URL pointing to the ASCII-armored GPG key file for the repository.,It can also be a list of multiple URLs.
+
+  - name: install vbox
+    package:
+      name: VirtualBox-6.1
+      state: present
+
+  - name: install the vagrant rpm from a remote repo
+    yum:
+      name: https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.rpm
+      state: present
+
+# vagrant box add centos/7
+
+  - name: create jenkins directory
+    file:
+      path: /root/jenkins # required. Path to the file being managed.
+      state: directory # not required. choices: absent;directory;file;hard;link;touch. If C(directory), all intermediate subdirectories will be created if they do not exist. Since Ansible 1.7 they will be created with the supplied permissions. If C(file), the file will NOT be created if it does not exist; see the C(touch) value or the M(copy) or M(template) module if you want that behavior.  If C(link), the symbolic link will be created or changed. Use C(hard) for hardlinks. If C(absent), directories will be recursively deleted, and files or symlinks will be unlinked. Note that C(absent) will not cause C(file) to fail if the C(path) does not exist as the state did not change. If C(touch) (new in 1.4), an empty file will be created if the C(path) does not exist, while an existing file or directory will receive updated file access and modification times (similar to the way `touch` works from the command line).
