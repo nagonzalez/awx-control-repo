@@ -1,0 +1,173 @@
+---
+minio_helm_chart:
+  name: minio
+  version: 5.0.6
+  release: minio-spin
+  namespace: spinnaker
+  source:
+    type: repo
+    location: https://kubernetes-charts.storage.googleapis.com
+  state: present
+  values:
+    accessKey: minio
+    secretKey: "{{ global_secrets['data']['password'] }}"
+
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        ingress.kubernetes.io/ssl-redirect: "true"
+        kubernetes.io/ingress.class: nginx
+      path: /
+      hosts:
+        - minio-spin.dev.noeg.wtf
+      tls:
+        - secretName: minio-spin-tls-prod
+          hosts:
+            - minio-spin.dev.noeg.wtf
+
+    ## Create a bucket after minio install
+    defaultBucket:
+      enabled: true
+      ## If enabled, must be a string with length > 0
+      name: spinnaker
+      ## Can be one of none|download|upload|public
+      policy: none
+      ## Purge if bucket exists already
+      purge: false
+
+redis_helm_chart:
+  name: redis
+  version: 10.4.1
+  release: redis-spin
+  namespace: spinnaker
+  source:
+    type: repo
+    location: https://kubernetes-charts.storage.googleapis.com
+  state: present
+  values:
+    password: "{{ global_secrets['data']['password'] }}"
+    cluster:
+      enabled: false
+
+spinnaker_helm_chart:
+  name: spinnaker
+  version: 1.23.2
+  release: spinnaker
+  namespace: spinnaker
+  source:
+    type: repo
+    location: https://kubernetes-charts.storage.googleapis.com
+  state: present
+  values:
+    halyard:
+      spinnakerVersion: 1.18.2
+      image:
+        repository: gcr.io/spinnaker-marketplace/halyard
+        tag: 1.31.1
+      # Provide a config map with Hal commands that will be run the core config (storage)
+      # The config map should contain a script in the config.sh key
+      additionalScripts:
+        create: true
+        data:
+          customize_spinnaker.sh: |
+            # expose sinnaker externally
+            $HAL_COMMAND config security ui edit --override-base-url https://spinnaker.dev.noeg.wtf
+            $HAL_COMMAND config security api edit --override-base-url https://gate.dev.noeg.wtf
+
+
+            # configure jenkins
+            if $HAL_COMMAND config ci jenkins master get jenkins-dev-noeg-wtf; then
+              PROVIDER_COMMAND='edit'
+            else
+              PROVIDER_COMMAND='add'
+            fi
+
+            echo '{{ global_secrets['data']['password'] }}' | $HAL_COMMAND config ci jenkins master $PROVIDER_COMMAND jenkins-dev-noeg-wtf --address https://jenkins.dev.noeg.wtf --username admin --password
+            $HAL_COMMAND config ci jenkins enable
+
+            # configure template-artifacts support for build triggers
+            # https://www.spinnaker.io/reference/artifacts/from-build-triggers/
+            if $HAL_COMMAND config artifact templates list | grep template-artifacts; then
+              PROVIDER_COMMAND='edit'
+            else
+              PROVIDER_COMMAND='add'
+            fi
+
+            $HAL_COMMAND config artifact templates $PROVIDER_COMMAND template-artifacts --template-path /opt/halyard/additionalSecrets/template-artifacts.jinja
+
+            # # TODO: optimize kubernetest deployments
+            # # this doesn't work on initial install as the k8s account doesn't exist yet
+            # # https://github.com/helm/charts/blob/5663bb7f2517fe179ec0fdb38f34ec3ad0454820/stable/spinnaker/templates/configmap/halyard-config.yaml#L18
+            # $HAL_COMMAND config provider kubernetes account edit default --live-manifest-calls true
+      additionalSecrets:
+        create: true
+        data:
+          # base64 encoded jinja template
+          # https://github.com/spinnaker/spinnaker/issues/4675
+          template-artifacts.jinja: "WwogIHslIGZvciBhcnRpZmFjdCBpbiBwcm9wZXJ0aWVzLmFydGlmYWN0cyAlfQogIHt7IGFydGlmYWN0fHRvanNvbiB9fXslIGlmIG5vdCBsb29wLmxhc3QgJX0seyUgZW5kaWYgJX0KICB7JSBlbmRmb3IgJX0KXQo="
+      ## Define custom profiles for Spinnaker services. Read more for details:
+      ## https://www.spinnaker.io/reference/halyard/custom/#custom-profiles
+      ## The contents of the files will be passed through `tpl`, so value interpolation is supported.
+      additionalProfileConfigMaps:
+        data:
+          front50-local.yml:
+            spinnaker:
+              s3:
+                versioning: false
+                pathStyleAccess: true
+
+    kubeConfig:
+      onlySpinnakerManaged:
+        enabled: true
+
+    # spinnakerFeatureFlags:
+    #   - artifacts
+    #   # - artifactsRewrite
+    #   # - jobs
+    #   - pipeline-templates
+    #   - managed-pipeline-templates-v2-ui
+
+    redis:
+      enabled: false
+      # External Redis option will be enabled if in-cluster redis is disabled
+      external:
+        host: redis-spin-master
+        port: 6379
+        password: "{{ global_secrets['data']['password'] }}"
+
+    minio:
+      enabled: false
+
+    s3:
+      enabled: true
+      bucket: spinnaker
+      endpoint: "http://minio-spin:9000"
+      accessKey: minio
+      secretKey: "{{ global_secrets['data']['password'] }}"
+
+    ingress:
+      enabled: true
+      host: spinnaker.dev.noeg.wtf
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: 'true'
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      tls:
+      - secretName: spinnaker-tls-prod
+        hosts:
+          - spinnaker.dev.noeg.wtf
+
+
+    ingressGate:
+      enabled: true
+      host: gate.dev.noeg.wtf
+      annotations:
+        ingress.kubernetes.io/ssl-redirect: 'true'
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      tls:
+        - secretName: gate-tls-prod
+          hosts:
+            - gate.dev.noeg.wtf
+

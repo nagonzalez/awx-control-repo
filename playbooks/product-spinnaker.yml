@@ -1,0 +1,5 @@
+- hosts: product_spinnaker
+  roles:
+    - ansible-role-minio
+    - ansible-role-redis
+    - ansible-role-spinnaker
