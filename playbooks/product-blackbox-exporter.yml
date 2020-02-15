@@ -1,0 +1,4 @@
+---
+- hosts: product_blackbox_exporter
+  roles:
+    - ansible-role-blackbox-exporter
