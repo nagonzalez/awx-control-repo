@@ -1,3 +1,0 @@
-- hosts: app_spinnaker
-  roles:
-    - nagonzalez.spinnaker

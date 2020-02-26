@@ -24,8 +24,8 @@ mount_devices:
 rke_secrets: "{{ lookup('hashi_vault', 'secret=secret/data/dev/rke') }}"
 
 # rke binary version
-rke_version: 1.0.3
-rke_checksum: sha256:736e8c5da16d28f1f32b71f66ff4ae5d0a3ffa9b868589876832f0faaabd93fd
+rke_version: 1.0.4
+rke_checksum: sha256:8219a09dbf21b2712ae21a2a43c86e941eeeaccd791552e806026c092f5a94cb
 
 rke_node_user: centos
 rke_node_user_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFAPWyoqBkZIlGVjbMFJkNfMMWiTAxMvR2oThsGqHdjkSZypC2JogKlTFe+jBz9Gp7tEmiuU5r8yfANyvtGTVEjfrckXtqHc9HW5rjmdDyLoBVd1mlppsWnhO12xo4yt+61IeXrGhPzqflui+XyhmFvqdTk/8Kx/eizyHuHBXbovzmJab/ApQFv6gs4buTaepqWHSfetH4eLOHyvra/5b0VZyxoSdzuhcovsCARkOqRMVA2p4B+SYV4rfUK/Z2TVHuhN8Yx6JY83P2UcuGdha6HkfcIroPAQRvsqoZnUWo+gnZ2Hjzhs3lD1BuGvKQrmAJONvBa3JkOkEUI87aHLWv noe.gonzalez@dev.noe.local
